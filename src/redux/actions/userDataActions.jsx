@@ -1,15 +1,15 @@
 import axios from 'axios';
 
-export const EDIT_NICK = 'EDIT_NICK';
 export const EDIT_USER = 'EDIT_USER';
-export const EDIT_ID = 'EDIT_ID';
 export const FAIL = 'FAIL';
+
+
 export function getSessionUser(url){
 	return (dispatch) => {
 		return axios.post(url)
 			.then((response) => {
 	            if(response.data){
-	               dispatch({type: EDIT_USER, payloads: {nick: response.data.nameUser, id: response.data.id}});
+	               dispatch({type: EDIT_USER, payloads: response.data});
 	            }
 	            else{
 	            	dispatch({type: FAIL , payloads: response});
@@ -30,12 +30,12 @@ export function editUser(url, log, pass){
 	            if(response.data == 'Ник занят!') {
 	            	dispatch({type: FAIL , payloads: 'Ник занят!'});
 	            }
-	            if(response.data == 'Пользователь с таким логином и паролем не найден!') {
+	            if(response.data == 'USER_NOT_FOUND!') {
 	            	dispatch({type: FAIL , payloads: 'Пользователь с таким логином и паролем не найден!'});
 
 	            }
-	            if(response.data.nameUser){
-	               dispatch({type: EDIT_USER, payloads: {nick: response.data.nameUser, id: response.data.idUser}});
+	            if(response.data.login != ''){
+	               dispatch({type: EDIT_USER, payloads: response.data});
 	            }
 	          })
 	          .catch(function (error) {
@@ -51,36 +51,14 @@ export function fail(f) {
 }
 
 
-
-export function editNickName(NickName) {
-  // if (NickName === '' || !NickName) return { type: FAIL };
-  return { type: EDIT_NICK, payloads: NickName };
-}
-
-
-export function editId(id) {
-  // if (id == '' || !id) return { type: FAIL };
-  return { type: EDIT_ID, payloads: id };
-}
-
-export function axi(url){
-	return (dispatch) => {
-			
-		  	axios.post(url)
-			  .then(function (response) {
-			    if(response.data.nameUser && response.data.id){
-					 dispatch(editNickName(response.data.nameUser));
-					 dispatch(editId(response.data.id));
-					return true;
-				}
-				else{
-					return false;
-				}		
-					
-			  })
-			  .catch(function (error) {
-			    console.log(error);
-			  });
-			 
-	}
-}
+//
+// export function editNickName(NickName) {
+//   // if (NickName === '' || !NickName) return { type: FAIL };
+//   return { type: EDIT_NICK, payloads: NickName };
+// }
+//
+//
+// export function editId(id) {
+//   // if (id == '' || !id) return { type: FAIL };
+//   return { type: EDIT_ID, payloads: id };
+// }

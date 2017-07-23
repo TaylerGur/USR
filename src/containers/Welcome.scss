@@ -1,0 +1,33 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+.AlertMessage{
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 30px;
+    padding-top: 5px;
+    background-color: rgba(255, 0, 0, 0.56);
+    color: white;
+    text-align: center;
+
+}
+.SingIn{
+    position: absolute;
+    top: 40px;
+    right: 30px;
+}
+
+.WelcomeBtnChangeMode{
+  position: absolute;
+  bottom: 30px;
+  width: 100%;
+  text-align: center;
+}
+.no-visible{
+  display: none;
+}
+.noValid{
+  border: 2px solid red;
+}

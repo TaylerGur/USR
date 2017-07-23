@@ -56,8 +56,40 @@ app.use(session({
 //     socket.broadcast.emit('update_messages_client');
 //   });
 // });
+app.post('/api/get_session', jsonParser, function(req, res){
+  // console.log(req.session);
+	if(req.session.user){
+		res.send(req.session.user);
+	}
+	else{
+		res.send(false);
+	}
+});
+app.post('/api/get_user', jsonParser, function(req, res){
+	// console.log(req.body);
+	mysql.query("SELECT name, firstName, phone, login, id, born FROM users WHERE login='" + req.body.nick + "' AND password='" + req.body.pass + "'", function(err, result,field){
+
+        if(err) {
+            console.log('%%%%%%%%GET_USER_ERROR%%%%%%%%%');
+
+        }
+
+        if(result.length > 0){
+            console.log(result[0]);
+            req.session.user = result[0];
+            res.send(req.session.user);
 
 
+
+        }
+        else{
+        	res.send('USER_NOT_FOUND!');
+        }
+    });
+
+	// res.send(false);
+
+});
 app.post('/api/create_session', jsonParser, function(req, res){
     console.log(req.body);
     // req.session.user.login = req.body.login;
@@ -81,7 +113,7 @@ app.get('/out', function(req, res, next) {
 
 
 app.get('*', function (req, res) {
- 
+
     //      console.log('host', req.url);
     // if(req.session.user){
     //     // res.render('index', {nameUser: req.session.user.name, idUser: req.session.user.id, auth: true});
@@ -108,67 +140,67 @@ app.get('*', function (req, res) {
 // app.post('/api/add_dialog', jsonParser, function(req, res){
 //     console.log(req.body);
 //     mysql.query("INSERT IGNORE INTO dialogs (title) VALUES('" + req.body.title + "')", function(err, result,field){
-        
+
 //         if(err) {
 //             console.log('%%%%%%%%ADD_DIALOG_ERROR%%%%%%%%%');
 //         }
 //         if(result){
 //             console.log('add chat in database');
-        
+
 //             mysql.query("SELECT * FROM dialogs WHERE title='" + req.body.title + "' ", function(err, result,field){
-        
+
 //                 if(err) {
 //                     console.log('%%%%%%%%ADD_DIALOG222_ERROR%%%%%%%%%');
 //                 }
 //                 if(result){
 //                     console.log(result[0]);
-//                    res.send(result[0]); 
-                  
+//                    res.send(result[0]);
 
-//                 } 
+
+//                 }
 //             });
-     
-//         } 
+
+//         }
 //     });
-  
-    
+
+
 // });
 // app.post('/api/add_message', jsonParser, function(req, res){
 //     console.log(req.body);
 //     mysql.query("INSERT IGNORE INTO messages (dialog_id, author_id, text, date) VALUES('" + req.body.dialog_id + "', '" + req.body.author_id +  "', '" + req.body.text +  "', '" + req.body.date +  "')", function(err, result,field){
-   
+
 //         if(err) {
 //             console.log('%%%%%%%%ADD_MESSAGE_ERROR%%%%%%%%%');
-            
+
 //         }
 
 //         if(result) console.log('add message in database');
-//            res.send(true); 
-                        
-        
-       
-    
+//            res.send(true);
+
+
+
+
 //     });
-  
-    
+
+
 // });
 // app.post('/api/get_dialog', jsonParser, function(req, res){
 //     mysql.query("SELECT m.text, m.date, m.author_id , u.nickName  FROM messages m INNER JOIN users u ON m.author_id = u.id WHERE dialog_id='" + req.body.id + "' ORDER BY m.date", function(err, result,field){
-   
+
 //         if(err) {
 //             console.log('%%%%%%%%GET_DIALOG_ERROR%%%%%%%%%');
-            
+
 //         }
 //         if(result && result.length > 0){
-    
+
 //             res.send(result);
-            
- 
-                        
+
+
+
 //         }
 //         else{
 //             console.log('Cообщений нет!');
-//             res.send(true);  
+//             res.send(true);
 //         }
 //     });
 
@@ -177,21 +209,21 @@ app.get('*', function (req, res) {
 
 // app.post('/api/get_dialogs', jsonParser, function(req, res){
 //     mysql.query("SELECT * FROM dialogs", function(err, result,field){
-   
+
 //         if(err) {
 //             console.log('%%%%%%%%GET_DIALOGS_ERROR%%%%%%%%%');
-            
+
 //         }
 //         if(result.length > 0){
-    
+
 //             res.send(result);
-            
- 
-                        
+
+
+
 //         }
 //         else{
 //             console.log('Диалоггов нет!');
-//             res.send('Диалоггов нет!');  
+//             res.send('Диалоггов нет!');
 //         }
 //     });
 
@@ -212,27 +244,27 @@ app.get('*', function (req, res) {
 // app.post('/api/get_user', jsonParser, function(req, res){
 // 	console.log(req.body);
 // 	mysql.query("SELECT * FROM users WHERE nickName='" + req.body.nick + "' AND password='" + req.body.pass + "'", function(err, result,field){
-   
+
 //         if(err) {
 //             console.log('%%%%%%%%GET_USER_ERROR%%%%%%%%%');
-            
+
 //         }
 
 //         if(result.length > 0){
 //             console.log(result[0]);
 //             req.session.user = result[0];
 //             res.send({nameUser: req.session.user.nickName, idUser: req.session.user.id, auth: true });
-            
- 
-			            
+
+
+
 //         }
 //         else{
-//         	res.send('Пользователь с таким логином и паролем не найден!');	
+//         	res.send('Пользователь с таким логином и паролем не найден!');
 //         }
 //     });
-    
+
 // 	// res.send(false);
-	
+
 // });
 
 
@@ -240,40 +272,40 @@ app.get('*', function (req, res) {
 // app.post('/api/add_user', jsonParser, function(req, res){
 // 	console.log(req.body);
 // 	mysql.query("SELECT * FROM users WHERE nickName='" + req.body.nick + "'", function(err, result,field){
-   
+
 //         if(err) {
 //             console.log('%%%%%%%%SAVE_ERROR%%%%%%%%%');
-            
+
 //         }
 
 //         if(result.length > 0){
 //             console.log('In the database there is already such a nickname');
 //             console.log(result.length);
-            
-//             res.send("Ник занят!");  
-			            
+
+//             res.send("Ник занят!");
+
 //         }
 //         else{
 //         	mysql.query("INSERT IGNORE INTO users (nickName, password) VALUES('" + req.body.nick + "','" + req.body.pass + "')", function(err, result,field){
-   
+
 // 		        if(err) {
 // 		            console.log('%%%%%%%%SAVE ERROR%%%%%%%%%');
 // 		        }
 
 // 		        if(result){
-		            
+
 // 		            res.send('все ок!!');
-		            
+
 // 		        }else{
-// 		            res.send('Что-то пошло не так;(');   
-// 		        }  
+// 		            res.send('Что-то пошло не так;(');
+// 		        }
 
 // 		    });
 //         }
 //     });
-    
+
 // 	// res.send(false);
-	
+
 // });
 
 

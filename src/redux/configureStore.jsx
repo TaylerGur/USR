@@ -1,10 +1,10 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import {composeWithDevTools} from 'redux-devtools-extension';
-import dataReducer from './reducers/dataReducer.jsx';
+import userDataReducer from './reducers/userDataReducer.jsx';
 export default function (initialState = {}) {
   const rootReducer = combineReducers({
-  	data:dataReducer
+  	userData:userDataReducer
   });
 
   return createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
